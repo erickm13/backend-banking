@@ -30,7 +30,6 @@ module.exports = function(dbInyectada){
     }
 
     
-    
     async function login(username, password){
         const data = await db.queryLogin(tabla, {username: username});
         if(data){
@@ -49,6 +48,6 @@ module.exports = function(dbInyectada){
     }
     return{
     agregar,
-    login
+    login,
     }
 }
