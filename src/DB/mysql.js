@@ -80,11 +80,25 @@ function queryLogin(tabla, consulta){
 }
 // **************** Querys Login ****************
 
+function agregarCuenta(tabla, data){
+    return new Promise((resolve, reject) => {
+        conexion.query(`INSERT INTO ${tabla} SET ? ON DUPLICATE KEY UPDATE ?`, [data,data], (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
 
+// **************** Querys Cuentas ****************
+
+
+
+
+// **************** Querys Cuentas ****************
 module.exports = {
     todos,
     uno,
     agregar,
     eliminar,
-    queryLogin
+    queryLogin,
+    agregarCuenta
 }

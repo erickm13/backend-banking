@@ -1,4 +1,5 @@
 const tabla = 'cuenta_bancaria';
+const error = require('../../middleware/error');
 const auth = require('../auth');
 module.exports = function(dbInyectada){
 
@@ -17,39 +18,18 @@ module.exports = function(dbInyectada){
     }
     
    async function agregar(body){
-        const usuario ={
+        const cuenta ={
+            cuenta_bancaria: 0,
             id_usuario: body.id_usuario,
-            rol: body.rol,
-            nombre: body.nombre,
-            identificador: body.identificador,
-            fecha_nacimiento: body.fecha_nacimiento,
-            sexo: body.sexo,
-            direccion: body.direccion,
-            telefono: body.telefono,
-            estado_civil: body.estado_civil,
-            correo: body.correo,
-            activo: body.activo,
-
+            balance: body.balance,
         }
 
-        const respuesta = await db.agregar(tabla, usuario);
-        console.log(respuesta);
-        var insertId = 0;
         if(body.id_usuario == 0){
-            insertId = respuesta.insertId;
-        }else{
-            insertId = body.id_usuario;
+            return error("El usuario no esta registrado", 401);
         }
-        const respuesta2 = '';
-        if(body.id_usuario || body.password ){
-          respuesa2 =  await auth.agregar({
-                id_usuario: insertId,
-                username: body.username,
-                password: body.password,
-                token: body.token
-            })
-        }
-        return respuesta2;
+        const respuesta = await db.agregarCuenta(tabla, cuenta);
+        console.log(respuesta);
+        return respuesta;
     }
     function eliminar(body){
         return db.eliminar(tabla, body);
