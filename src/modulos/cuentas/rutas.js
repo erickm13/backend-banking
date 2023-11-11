@@ -52,6 +52,7 @@ async function eliminar(req, res, next)  {
 
     try {
         const items = await controlador.eliminar(req.body);
+        console.log(items);
         respuesta.succes(req, res, 'Cuenta eliminada Satisfactoriamente', 200);
         
     } catch (error) {

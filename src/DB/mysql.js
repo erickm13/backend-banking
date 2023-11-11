@@ -94,7 +94,7 @@ function agregarCuenta(tabla, data){
 
 function eliminarCuenta(tabla, data){
     return new Promise((resolve, reject) => {
-        conexion.query(`DELETE FROM ${tabla} WHERE id_usuario= ? AND balance = 0`, data.id_usuario, (err, result) => {
+        conexion.query(`DELETE FROM ${tabla} WHERE cuenta_bancaria = ? AND id_usuario = ? AND balance = 0;`, [data.cuenta_bancaria, data.id_usuario], (err, result) => {
             return err ? reject(err) : resolve(result);
         });
     });

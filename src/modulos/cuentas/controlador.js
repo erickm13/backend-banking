@@ -33,8 +33,10 @@ module.exports = function(dbInyectada){
         console.log(respuesta);
         return respuesta;
     }
-    function eliminar(body){
-        return db.eliminarCuenta(tabla, body);
+    async function eliminar(body){
+        const respuesta = await db.eliminarCuenta(tabla, body);
+        console.log(respuesta);
+        return 
     }
 
     function actualizar(body){
