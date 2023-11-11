@@ -18,26 +18,35 @@ module.exports = function(dbInyectada){
     }
     
    async function agregar(body){
-        const cuenta ={
-            cuenta_bancaria: 0,
-            id_usuario: body.id_usuario,
-            balance: body.balance,
+       const cuenta ={
+           cuenta_bancaria: 0,
+           id_usuario: body.id_usuario,
+           tipo: body.tipo,
+           balance: body.balance,
         }
 
-        if(body.id_usuario == 0){
-            return error("El usuario no esta registrado", 401);
-        }
+        if(cuenta.id_usuario == 0){
+            return error();
+         }
+
         const respuesta = await db.agregarCuenta(tabla, cuenta);
         console.log(respuesta);
         return respuesta;
     }
     function eliminar(body){
-        return db.eliminar(tabla, body);
+        return db.eliminarCuenta(tabla, body);
     }
+
+    function actualizar(body){
+        return db.actualizarCuenta(tabla, body);
+    }
+
+
     return{
     todos,
     uno,
     agregar,
-    eliminar
+    eliminar,
+    actualizar
     }
 }

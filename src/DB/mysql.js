@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const config = require('../config');
+const { reject } = require('bcrypt/promises');
 
 const dbConfig = {
     host: config.mysql.host,
@@ -80,25 +81,44 @@ function queryLogin(tabla, consulta){
 }
 // **************** Querys Login ****************
 
+
+// **************** Querys Cuentas ****************
+
 function agregarCuenta(tabla, data){
     return new Promise((resolve, reject) => {
-        conexion.query(`INSERT INTO ${tabla} SET ? ON DUPLICATE KEY UPDATE ?`, [data,data], (err, result) => {
+        conexion.query(`INSERT INTO ${tabla} SET ?`, [data,data], (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+function eliminarCuenta(tabla, data){
+    return new Promise((resolve, reject) => {
+        conexion.query(`DELETE FROM ${tabla} WHERE id_usuario= ? AND balance = 0`, data.id_usuario, (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+function actualizarCuenta(tabla, data){
+    return new Promise((resolve, reject) => {
+        conexion.query(`UPDATE ${tabla}  SET balance = ? WHERE cuenta_bancaria = ? AND id_usuario = ?`, [data.balance, data.cuenta_bancaria, data.id_usuario], (err, result) => {
             return err ? reject(err) : resolve(result);
         });
     });
 }
 
 // **************** Querys Cuentas ****************
-
-
-
-
-// **************** Querys Cuentas ****************
 module.exports = {
+//--------------------- usuarios
     todos,
     uno,
     agregar,
     eliminar,
+//--------------------  login
     queryLogin,
-    agregarCuenta
+//----------------------cuentas
+    agregarCuenta,
+    eliminarCuenta,
+    actualizarCuenta
 }
