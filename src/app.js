@@ -6,6 +6,7 @@ const auth = require('./modulos/auth/rutas');
 const cuentas = require('./modulos/cuentas/rutas');
 const error = require('./red/errors');
 const cors = require('cors');
+const prestamos = require('./modulos/prestamos/rutas');
 const app = express();
 
 //Middleware
@@ -20,5 +21,6 @@ app.set('port', config.app.port);
 app.use('/api/usuarios', usuarios);
 app.use('/api/auth', auth);
 app.use('/api/cuentas', cuentas);
+app.use('/api/prestamos', prestamos);
 app.use(error);
 module.exports = app;

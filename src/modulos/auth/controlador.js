@@ -32,6 +32,7 @@ module.exports = function(dbInyectada){
     
     async function login(username, password){
         const data = await db.queryLogin(tabla, {username: username});
+        console.log(data);
         if(data){
             return bcrypt.compare(password, data.password)
                 .then(resultado => {

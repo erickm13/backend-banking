@@ -109,6 +109,58 @@ function actualizarCuenta(tabla, data){
 }
 
 // **************** Querys Cuentas ****************
+
+// **************** Querys Prestamo ****************
+
+function agregarPrestamo(tabla, data){
+    return new Promise((resolve, reject) => {
+        conexion.query(`INSERT INTO ${tabla} SET ?`, [data,data], (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+function eliminarPrestamo(tabla, data){
+    return new Promise((resolve, reject) => {
+        conexion.query(`DELETE FROM ${tabla} WHERE id_prestamo = ? AND id_usuario = ? AND cantidad = 0;`, [data.id_prestamo, data.id_usuario], (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+function actualizarPrestamo(tabla, data){
+    return new Promise((resolve, reject) => {
+        conexion.query(`UPDATE ${tabla}  SET cantidad = ? WHERE id_prestamo = ? AND id_usuario = ?`, [data.cantidad, data.id_prestamo, data.id_usuario], (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+// **************** Querys Prestamo ****************
+
+
+// **************** Querys Contrato ****************
+
+function agregarContrato(tabla, data){
+    return new Promise((resolve, reject) => {
+        conexion.query(`INSERT INTO ${tabla} SET ?`, [data,data], (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+function eliminarContrato(tabla, data){
+    return new Promise((resolve, reject) => {
+        conexion.query(`DELETE FROM ${tabla} WHERE id_contrato = ?;`, [data.id_contrato], (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+
+// **************** Querys Contrato ****************
+
+
 module.exports = {
 //--------------------- usuarios
     todos,
@@ -120,5 +172,15 @@ module.exports = {
 //----------------------cuentas
     agregarCuenta,
     eliminarCuenta,
-    actualizarCuenta
+    actualizarCuenta,
+
+//----------------------Prestamos
+    agregarPrestamo,
+    eliminarPrestamo,
+    actualizarPrestamo,
+
+//----------------------Contratos
+    agregarContrato,
+    eliminarContrato
+
 }
