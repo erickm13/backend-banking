@@ -7,7 +7,7 @@ const cuentas = require('./modulos/cuentas/rutas');
 const error = require('./red/errors');
 const cors = require('cors');
 const prestamos = require('./modulos/prestamos/rutas');
-const empresas = require('./modulos/empresas');
+const empresas = require('./modulos/empresas/rutas');
 const app = express();
 
 //Middleware

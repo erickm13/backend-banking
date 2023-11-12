@@ -7,7 +7,6 @@ router.get('/', todos);
 router.get('/:id', uno);
 router.post('/', agregar);
 router.delete('/', eliminar);
-router.put('/', actualizar);
 
 
  async function todos(req, res, next)  {
@@ -54,17 +53,6 @@ async function eliminar(req, res, next)  {
         const items = await controlador.eliminar(req.body);
         console.log(items);
         respuesta.succes(req, res, 'Cuenta eliminada Satisfactoriamente', 200);
-        
-    } catch (error) {
-        next(error);
-    }
-};
-
-async function actualizar(req, res, next)  {
-
-    try {
-        const items = await controlador.actualizar(req.body);
-        respuesta.succes(req, res, 'Cuenta actualizada Satisfactoriamente', 201);
         
     } catch (error) {
         next(error);
