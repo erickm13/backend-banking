@@ -7,6 +7,7 @@ const cuentas = require('./modulos/cuentas/rutas');
 const error = require('./red/errors');
 const cors = require('cors');
 const prestamos = require('./modulos/prestamos/rutas');
+const empresas = require('./modulos/empresas');
 const app = express();
 
 //Middleware
@@ -22,5 +23,6 @@ app.use('/api/usuarios', usuarios);
 app.use('/api/auth', auth);
 app.use('/api/cuentas', cuentas);
 app.use('/api/prestamos', prestamos);
+app.use('/api/empresas', empresas);
 app.use(error);
 module.exports = app;
