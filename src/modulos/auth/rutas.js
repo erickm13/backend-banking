@@ -16,6 +16,18 @@ async function login(req, res, next)  {
         next(error);
     }
 }
+
+async function getRol(req, res, next)  {
+
+    try {
+        const token = await controlador.login(req.body.username, req.body.password);
+        console.log(token);
+        respuesta.succes(req, res, token, 200);
+        
+    } catch (error) {
+        next(error);
+    }
+}
  
 
 module.exports = router;

@@ -30,23 +30,18 @@ module.exports = function(dbInyectada){
         return db.agregar(tabla, authData);
     }
 
-    async function getRol(data){
-        const authData = {
-            id_usuario: data.id_usuario, 
-        }
-        return db.getRol(tabla, authData);
-    }
     
     async function login(username, password){
         const data = await db.queryLogin(tabla, {username: username});
-        console.log(data);
-        const rol = 0;
+        const rol = await db.getRol(tablaUsuario, data.id_usuario);
+        console.log("dataaaa "+ data);
+        console.log("rooool " + rol);
         if(data){
             return bcrypt.compare(password, data.password)
                 .then(resultado => {
                     if(resultado === true){
                         //Generar token
-                        return auth.asignarToken({data});
+                        return auth.asignarToken({data}, rol.rol);
                     }else{
                         throw error('Password invalido', 401);
                     }

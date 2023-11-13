@@ -80,9 +80,9 @@ function queryLogin(tabla, consulta){
     });
 }
 
-function getRol(tabla, consulta){
+function getRol(tabla, id){
     return new Promise((resolve, reject) => {
-        conexion.query(`SELECT * FROM ${tabla} WHERE id_usuario = ?`, consulta, (err, result) => {
+        conexion.query(`SELECT * FROM ${tabla} WHERE id_usuario = ?`, id, (err, result) => {
             return err ? reject(err) : resolve(result[0]);
         });
     });
