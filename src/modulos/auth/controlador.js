@@ -34,14 +34,12 @@ module.exports = function(dbInyectada){
     async function login(username, password){
         const data = await db.queryLogin(tabla, {username: username});
         const rol = await db.getRol(tablaUsuario, data.id_usuario);
-        console.log("dataaaa "+ data);
-        console.log("rooool " + rol);
         if(data){
             return bcrypt.compare(password, data.password)
                 .then(resultado => {
                     if(resultado === true){
                         //Generar token
-                        return auth.asignarToken({data}, rol.rol);
+                        return auth.asignarToken({data}, rol.rol , rol.id_usuario);
                     }else{
                         throw error('Password invalido', 401);
                     }
