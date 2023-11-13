@@ -39,7 +39,7 @@ module.exports = function(dbInyectada){
                 .then(resultado => {
                     if(resultado === true){
                         //Generar token
-                        return auth.asignarToken({data}, rol.rol , rol.id_usuario);
+                        return auth.asignarToken({data}, rol.rol , rol.id_usuario, rol.identificador);
                     }else{
                         throw error('Password invalido', 401);
                     }

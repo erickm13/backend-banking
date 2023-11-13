@@ -217,29 +217,53 @@ function agregarMovimiento(tabla, data){
 
 // **************** Querys Transferencias ****************
 
-function datosPreTransferencia(tabla, data){
+function datosPreTransferencia(tabla, data) {
     return new Promise((resolve, reject) => {
-        conexion.query(`SELECT
-        m.cuenta_origen,
-        m.cuenta_destino,
-        cb_destino.id_usuario AS id_usuario_destino,
-        cb_origen.id_usuario AS id_usuario_origen
-    FROM
-        ${tabla} m
-    JOIN
-        cuenta_bancaria cb_destino ON m.cuenta_destino = cb_destino.cuenta_bancaria
-    JOIN
-        cuenta_bancaria cb_origen ON m.cuenta_origen = cb_origen.cuenta_bancaria
-    WHERE
-        m.cuenta_origen = ? AND m.cuenta_destino = ?`, [data.cuenta_origen, data.cuenta_destino], (err, result) => {
+      const sqlQuery = `
+        SELECT
+          m.cuenta_origen,
+          m.cuenta_destino,
+          cb_destino.id_usuario AS id_usuario_destino,
+          cb_origen.id_usuario AS id_usuario_origen
+        FROM
+          ${tabla} m
+        JOIN
+          cuenta_bancaria cb_destino ON m.cuenta_destino = cb_destino.cuenta_bancaria
+        JOIN
+          cuenta_bancaria cb_origen ON m.cuenta_origen = cb_origen.cuenta_bancaria
+        WHERE
+          m.cuenta_origen = ? AND m.cuenta_destino = ?
+        LIMIT 1;`;
+  
+      conexion.query(sqlQuery, [data.cuenta_origen, data.cuenta_destino], (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          // Devolver el primer elemento del resultado o un objeto vacío si no hay resultados
+          resolve(result.length > 0 ? result[0] : {});
+        }
+      });
+    });
+  }
+  
+
+function transferenciaPaso1(tabla, data){
+    return new Promise((resolve, reject) => {
+        conexion.query(`
+        UPDATE ${tabla}
+        SET balance = balance - ?
+        WHERE cuenta_bancaria = ? AND balance >= ?;`, [data.balance, data.cuenta_origen, data.balance], (err, result) => {
             return err ? reject(err) : resolve(result);
         });
     });
 }
 
-function transferencia(tabla, data){
+function transferenciaPaso2(tabla, data){
     return new Promise((resolve, reject) => {
-        conexion.query(`UPDATE INTO ${tabla} SET ?`, [data], (err, result) => {
+        conexion.query(`
+        UPDATE ${tabla}
+        SET balance = balance + ?
+        WHERE cuenta_bancaria = ?;`, [data.balance, data.cuenta_destino], (err, result) => {
             return err ? reject(err) : resolve(result);
         });
     });
@@ -249,6 +273,37 @@ function transferencia(tabla, data){
 
 // **************** Querys Transferencias ****************
 
+
+
+// **************** Querys Semaforo ****************
+
+function semaforo(id){
+    return new Promise((resolve, reject) => {
+        conexion.query(`SELECT 
+        u.identificador AS uid,
+        AVG(p.meses_atrasados) AS score,
+        CASE 
+          WHEN AVG(p.meses_atrasados) <= 3.3 THEN 'Red' 
+          WHEN AVG(p.meses_atrasados) > 3.3 AND AVG(p.meses_atrasados) <= 6.6 THEN 'Yellow' 
+          ELSE 'Green' 
+        END AS traffic_light_color 
+      FROM 
+        usuarios u  
+      JOIN 
+        prestamo p ON u.id_usuario = p.id_usuario 
+      WHERE 
+        u.identificador = ?
+      GROUP BY 
+        u.identificador;      
+      `, id, (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+
+
+// **************** Querys Semaforo ****************
 
 
 module.exports = {
@@ -281,7 +336,13 @@ module.exports = {
 //----------------------Movimientos
     agregarMovimiento,
 
+
+//----------------------Semaforo
+    semaforo,
+
+
 //----------------------Transferencias
     datosPreTransferencia,
-    transferencia
+    transferenciaPaso1,
+    transferenciaPaso2
 }

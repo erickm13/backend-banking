@@ -9,6 +9,7 @@ const cors = require('cors');
 const prestamos = require('./modulos/prestamos/rutas');
 const empresas = require('./modulos/empresas/rutas');
 const movimientos = require('./modulos/movimientos/rutas');
+const semaforo = require('./modulos/semaforo/rutas');
 const app = express();
 
 //Middleware
@@ -26,5 +27,6 @@ app.use('/api/cuentas', cuentas);
 app.use('/api/prestamos', prestamos);
 app.use('/api/empresas', empresas);
 app.use('/api/movimientos', movimientos);
+app.use('/api/semaforo', semaforo);
 app.use(error);
 module.exports = app;

@@ -1,4 +1,4 @@
-const tabla = 'movimiento';
+const tabla = 'prestamos';
 const tablaCuenta = 'cuenta_bancaria';
 const e = require('cors');
 const error = require('../../middleware/error');
@@ -15,8 +15,8 @@ module.exports = function(dbInyectada){
         return db.todos(tabla);
     }
     
-    function uno(id){
-        return db.uno(tabla, id);
+    function unoSemaforo(id){
+        return db.semaforo(id);
     }
     
    async function agregar(body){
@@ -82,7 +82,7 @@ module.exports = function(dbInyectada){
 
     return{
     todos,
-    uno,
+    unoSemaforo,
     agregar,
     eliminar,
     actualizar
