@@ -1,4 +1,5 @@
 const tabla = 'auth';
+const tablaUsuario = 'usuarios';
 const auth = require('../../auth');
 const bcrypt = require('bcrypt');
 const error = require('../../middleware/error');
@@ -29,10 +30,17 @@ module.exports = function(dbInyectada){
         return db.agregar(tabla, authData);
     }
 
+    async function getRol(data){
+        const authData = {
+            id_usuario: data.id_usuario, 
+        }
+        return db.getRol(tabla, authData);
+    }
     
     async function login(username, password){
         const data = await db.queryLogin(tabla, {username: username});
         console.log(data);
+        const rol = 0;
         if(data){
             return bcrypt.compare(password, data.password)
                 .then(resultado => {

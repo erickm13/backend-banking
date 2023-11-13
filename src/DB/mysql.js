@@ -79,10 +79,35 @@ function queryLogin(tabla, consulta){
         });
     });
 }
+
+function getRol(tabla, consulta){
+    return new Promise((resolve, reject) => {
+        conexion.query(`SELECT * FROM ${tabla} WHERE id_usuario = ?`, consulta, (err, result) => {
+            return err ? reject(err) : resolve(result[0]);
+        });
+    });
+}
+
 // **************** Querys Login ****************
 
 
 // **************** Querys Cuentas ****************
+
+function uno_cuentaBancaria(tabla, id){
+    return new Promise((resolve, reject) => {
+        conexion.query(`SELECT * FROM ${tabla} WHERE cuenta_bancaria = ${id} `, (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+function todos_idUsuario(tabla, id){
+    return new Promise((resolve, reject) => {
+        conexion.query(`SELECT * FROM ${tabla} WHERE id_usuario = ${id} `,  (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
 
 function agregarCuenta(tabla, data){
     return new Promise((resolve, reject) => {
@@ -136,6 +161,22 @@ function actualizarPrestamo(tabla, data){
     });
 }
 
+function getPrestamo(tabla, id){
+    return new Promise((resolve, reject) => {
+        conexion.query(`SELECT * FROM ${tabla} WHERE id_prestamo = ?`, id, (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+function getPrestamoforUser(tabla, id){
+    return new Promise((resolve, reject) => {
+        conexion.query(`SELECT * FROM ${tabla} WHERE id_usuario = ?`, id, (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
 // **************** Querys Prestamo ****************
 
 
@@ -143,7 +184,7 @@ function actualizarPrestamo(tabla, data){
 
 function agregarContrato(tabla, data){
     return new Promise((resolve, reject) => {
-        conexion.query(`INSERT INTO ${tabla} SET ?`, [data,data], (err, result) => {
+        conexion.query(`INSERT INTO ${tabla} SET ?`, [data], (err, result) => {
             return err ? reject(err) : resolve(result);
         });
     });
@@ -160,6 +201,55 @@ function eliminarContrato(tabla, data){
 
 // **************** Querys Contrato ****************
 
+// **************** Querys Movimientos ****************
+
+function agregarMovimiento(tabla, data){
+    return new Promise((resolve, reject) => {
+        conexion.query(`INSERT INTO ${tabla} SET ?`, [data], (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+
+
+// **************** Querys Movimientos ****************
+
+// **************** Querys Transferencias ****************
+
+function datosPreTransferencia(tabla, data){
+    return new Promise((resolve, reject) => {
+        conexion.query(`SELECT
+        m.cuenta_origen,
+        m.cuenta_destino,
+        cb_destino.id_usuario AS id_usuario_destino,
+        cb_origen.id_usuario AS id_usuario_origen
+    FROM
+        ${tabla} m
+    JOIN
+        cuenta_bancaria cb_destino ON m.cuenta_destino = cb_destino.cuenta_bancaria
+    JOIN
+        cuenta_bancaria cb_origen ON m.cuenta_origen = cb_origen.cuenta_bancaria
+    WHERE
+        m.cuenta_origen = ? AND m.cuenta_destino = ?`, [data.cuenta_origen, data.cuenta_destino], (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+function transferencia(tabla, data){
+    return new Promise((resolve, reject) => {
+        conexion.query(`UPDATE INTO ${tabla} SET ?`, [data], (err, result) => {
+            return err ? reject(err) : resolve(result);
+        });
+    });
+}
+
+
+
+// **************** Querys Transferencias ****************
+
+
 
 module.exports = {
 //--------------------- usuarios
@@ -169,18 +259,29 @@ module.exports = {
     eliminar,
 //--------------------  login
     queryLogin,
+    getRol,
 //----------------------cuentas
     agregarCuenta,
     eliminarCuenta,
     actualizarCuenta,
+    uno_cuentaBancaria,
+    todos_idUsuario,    
 
 //----------------------Prestamos
     agregarPrestamo,
     eliminarPrestamo,
+    getPrestamo,
+    getPrestamoforUser,
     actualizarPrestamo,
 
 //----------------------Contratos
     agregarContrato,
-    eliminarContrato
+    eliminarContrato,
 
+//----------------------Movimientos
+    agregarMovimiento,
+
+//----------------------Transferencias
+    datosPreTransferencia,
+    transferencia
 }

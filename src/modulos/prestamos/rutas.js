@@ -5,6 +5,7 @@ const error = require('../../middleware/error');
 const router = express.Router();
 router.get('/', todos);
 router.get('/:id', uno);
+router.get('/searchIdUser/:id', unoForUser);
 router.post('/', agregar);
 router.delete('/', eliminar);
 router.put('/', actualizar);
@@ -19,6 +20,17 @@ router.put('/', actualizar);
         next(error);
     }
 
+};
+
+async function unoForUser(req, res, next)  {
+
+    try {
+        const items = await controlador.unoForUser(req.params.id);
+        respuesta.succes(req, res, items, 200);
+        
+    } catch (error) {
+        next(error);
+    }
 };
 
  async function uno(req, res, next)  {

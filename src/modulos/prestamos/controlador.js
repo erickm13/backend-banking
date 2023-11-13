@@ -13,8 +13,13 @@ module.exports = function(dbInyectada){
         return db.todos(tabla);
     }
     
+
     function uno(id){
-        return db.uno(tabla, id);
+        return db.getPrestamo(tabla, id);
+    }
+
+    function unoForUser(id){
+        return db.getPrestamoforUser(tabla, id);
     }
     
    async function agregar(body){
@@ -54,6 +59,7 @@ module.exports = function(dbInyectada){
     return{
     todos,
     uno,
+    unoForUser,
     agregar,
     eliminar,
     actualizar

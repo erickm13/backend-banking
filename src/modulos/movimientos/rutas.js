@@ -5,8 +5,6 @@ const error = require('../../middleware/error');
 const router = express.Router();
 router.get('/', todos);
 router.get('/:id', uno);
-router.get('/searchIdUser/:id', todos_idUsuario);
-router.get('/searchCB/:id', uno_cuentaBancaria);
 router.post('/', agregar);
 router.delete('/', eliminar);
 router.put('/', actualizar);
@@ -23,32 +21,10 @@ router.put('/', actualizar);
 
 };
 
-async function todos_idUsuario(req, res, next)  {
-    try {
-        const items = await controlador.todos_idUsuario(req.params.id);
-        respuesta.succes(req, res, items, 200);
-        
-    } catch (error) {
-        next(error);
-    }
-
-};
-
-async function uno_cuentaBancaria(req, res, next)  {
-    try {
-        const items = await controlador.uno_cuentaBancaria(req.params.id);
-        respuesta.succes(req, res, items, 200);
-        
-    } catch (error) {
-        next(error);
-    }
-
-};
-
  async function uno(req, res, next)  {
 
     try {
-        const items = await controlador.uno_cuentaBancaria(req.params.id);
+        const items = await controlador.uno(req.params.id);
         respuesta.succes(req, res, items, 200);
         
     } catch (error) {
@@ -61,10 +37,10 @@ async function agregar(req, res, next)  {
     try {
         const items = await controlador.agregar(req.body);
         if(req.body.id_usuario == 0){
-            mensaje = 'EL USUARIO NO EXISTE'
+            mensaje = 'Transaccion no realizada, usuario no existe'
             throw error(mensaje, 401);
         }else{
-            mensaje = 'Cuenta Creada Satisfactoriamente';
+            mensaje = 'Transaccion realizada Satisfactoriamente';
             respuesta.succes(req, res, mensaje, 201);
         }
     } catch (error) {

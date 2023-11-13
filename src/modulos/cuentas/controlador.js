@@ -12,9 +12,13 @@ module.exports = function(dbInyectada){
     function todos(){
         return db.todos(tabla);
     }
+
+    function todos_idUsuario(id){
+        return db.todos_idUsuario(tabla, id);
+    }
     
-    function uno(id){
-        return db.uno(tabla, id);
+    function uno_cuentaBancaria(id){
+        return db.uno_cuentaBancaria(tabla, id);
     }
     
    async function agregar(body){
@@ -46,8 +50,9 @@ module.exports = function(dbInyectada){
 
     return{
     todos,
-    uno,
+    uno_cuentaBancaria,
     agregar,
+    todos_idUsuario,
     eliminar,
     actualizar
     }
